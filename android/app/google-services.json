@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558093047124",
+    "project_id": "ygo-vision",
+    "storage_bucket": "ygo-vision.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558093047124:android:01575f7003556ff78f64c1",
+        "android_client_info": {
+          "package_name": "com.ygo_vision.ygo_vision"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl37j-4kc42weefZG-MjnpOxuq8u64QM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
