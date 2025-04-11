@@ -1,16 +1,23 @@
-# ygo_vision
+# YGO Vision
 
-Gestion de collection YuGiOh + reconnaissance de carte
+L' application permet la gestion d' une collection de carte YUGiOh. On peut aussi créer des deck avec les cartes de la collection.
 
-## Getting Started
+## Pré-requis
 
-This project is a starting point for a Flutter application.
+- avoir un smartphone ou un accès a un navigateur web
+- avoir une connexion internet
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Pour l' accès au site web il faut aller sur le site : https://union-musicale.web.app mais pour avoir en application il suffit de cliquer sur la pop-up ou cliquer sur les 3 points de votre navigateur puis cliquer sur installer l'application
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Fonctionnalités à ajouter / corriger
+
+* Ajouter / supprimer des cartes à sa collection
+* Créer des decks (avec les cartes de sa collection)
+* Reconnaissance de carte par caméra
+
+
+## Contributeur
+
+* **Enzo Bras** _alias_ [@enzo.bras](https://github.com/enzo.bras)
