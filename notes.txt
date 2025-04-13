@@ -1,0 +1,38 @@
+SearchAnchor(
+  builder: (BuildContext context, SearchController controller) {
+    return SearchBar(
+      controller: controller,
+      onTap: () {
+        controller.openView();
+      },
+      onChanged: (_) {
+        controller.openView();
+      },
+      leading: const Icon(Icons.search),
+    );
+  },
+  suggestionsBuilder: (BuildContext context, SearchController controller) {
+    String searchingWithQuery = controller.text;
+    final Map<String, dynamic> options = Map.fromEntries(snapshot.data.entries.where((item) => item.value["name"] == searchingWithQuery));
+    final List<dynamic> optionsList = options.values.map((item) => item["name"]).toList();
+    if (searchingWithQuery != controller.text) {
+      return lastOptions;
+    }
+
+    lastOptions = List<ListTile>.generate(optionsList.length, (int index) {
+      return ListTile(title: Text(optionsList[index]['name']));
+    });
+
+    return lastOptions;
+  }),
+
+
+    leading: SizedBox(
+      width: 50,
+      height: 80,
+      child: CachedNetworkImage(
+        imageUrl: carte.card_images[0]['image_url'],
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      ),
+    ),
