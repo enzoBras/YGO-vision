@@ -4,7 +4,7 @@ import 'dart:convert';
 class RequestApi {
 
   Future<Map<String, dynamic>> getAllCards() async {
-    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php");
+    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php", {'language': 'fr'});
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -15,7 +15,7 @@ class RequestApi {
   }
 
   Future<Map<String, dynamic>> searchByName(String name) async {
-    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php", {'name': name});
+    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php", {'language': 'fr', 'name': name});
     var response = await http.get(url);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

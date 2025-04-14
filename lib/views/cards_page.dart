@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:ygo_vision/models/carte.dart';
 import 'package:ygo_vision/views/tools.dart';
 
+import 'detail_card_page.dart';
+
 class CardsPage extends StatefulWidget {
   const CardsPage({super.key});
 
@@ -29,26 +31,29 @@ class _CardsPageState extends State<CardsPage> {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                title: const Text('Cartes'),
+                title: const Text('Recherche bar'),
               ),
-              body: ListView.builder(
+              body: GridView.builder(
                 itemCount: cartes.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                ),
                 itemBuilder: (BuildContext context, int index) {
                   final carte = cartes[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: ListTile(
-                      leading: SizedBox(
-                        width: 50,
-                        height: 80,
-                        child: CachedNetworkImage(
-                          imageUrl: carte.card_images[0]['image_url'],
-                          placeholder: (context, url) => const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        ),
+                  return InkWell(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return DetailCard(carte);
+                          }));
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      child: CachedNetworkImage(
+                        imageUrl: carte.card_images[0]['image_url_small'],
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
-                      title: Text(carte.name),
-                      subtitle: Text(carte.type),
                     ),
                   );
                 }),

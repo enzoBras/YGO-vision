@@ -33,10 +33,10 @@ class _HomePageState extends State<HomePage> {
     ];
 
     const List<BottomNavigationBarItem> items =[
-      BottomNavigationBarItem(icon: Image(image: AssetImage("img/cards.png"), width: 40, height: 40), label: 'Cards'),
-      BottomNavigationBarItem(icon: Image(image: AssetImage("img/collection.png"), width: 40, height: 40), label: 'Collection'),
-      BottomNavigationBarItem(icon: Image(image: AssetImage("img/deck.png"), width: 40, height: 40), label: 'Deck'),
-      BottomNavigationBarItem(icon: Image(image: AssetImage("img/scan.png"), width: 40, height: 40), label: 'Scan',),
+      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/cards.png"), width: 40, height: 40), label: 'Cards'),
+      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/collection.png"), width: 40, height: 40), label: 'Collection'),
+      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/deck.png"), width: 40, height: 40), label: 'Deck'),
+      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/scan.png"), width: 40, height: 40), label: 'Scan',),
     ];
 
     return Scaffold(
