@@ -13,54 +13,85 @@ class CardsPage extends StatefulWidget {
 }
 
 class _CardsPageState extends State<CardsPage> {
+  final SearchController searchController = SearchController();
+  List<Carte> allCartes = [];
+  List<Carte> cartes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    searchController.addListener(queryListener);
+    _loadCartes();
+  }
+
+  void _loadCartes() async {
+    allCartes = await Carte.getCartes();
+    setState(() {
+      cartes = allCartes;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.removeListener(queryListener);
+  }
+
+  void queryListener() {
+    search(searchController.text);
+  }
+
+  void search(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        cartes = allCartes;
+      });
+    } else {
+      setState(() {
+        cartes = allCartes.where((Carte carte) =>
+            carte.name.toLowerCase().contains(query.toLowerCase())
+        ).toList();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Carte.getCartes(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasError) {
-            debugPrint(snapshot.error.toString());
-            return widgetError();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return widgetCercleProgression();
-          }
-          if(snapshot.hasData) {
-            final cartes = snapshot.data!;
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                title: const Text('Recherche bar'),
-              ),
-              body: GridView.builder(
-                itemCount: cartes.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
+    return Scaffold(
+      appBar: AppBar(
+        title: SearchBar(
+          controller: searchController,
+          leading: Icon(Icons.search),
+          hintText: 'Rechercher',
+          elevation: WidgetStateProperty.all(0),
+        ),
+      ),
+      body: cartes.isEmpty
+        ? widgetCercleProgression()
+        : GridView.builder(
+          itemCount: cartes.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            final carte = cartes[index];
+            return InkWell(
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                      return DetailCard(carte);
+                    }));
+              },
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                child: CachedNetworkImage(
+                  imageUrl: carte.card_images[0]['image_url_small'],
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                itemBuilder: (BuildContext context, int index) {
-                  final carte = cartes[index];
-                  return InkWell(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                            return DetailCard(carte);
-                          }));
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                      child: CachedNetworkImage(
-                        imageUrl: carte.card_images[0]['image_url_small'],
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      ),
-                    ),
-                  );
-                }),
+              ),
             );
-          }
-          return const SizedBox();
-        }
+          }),
     );
   }
 }

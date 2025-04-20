@@ -12,7 +12,12 @@ Widget widgetCercleProgression() {
           SizedBox(height: 20),
           Text(
             'Chargement en cours...',
-            style: TextStyle(fontWeight: FontWeight.bold, inherit: false, fontSize: 32.0),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              inherit: false,
+              fontSize: 30.0,
+            ),
           ),
         ]
     ),

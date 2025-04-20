@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ygo_vision/models/carte.dart';
 import 'package:ygo_vision/views/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +18,8 @@ class YGOVision extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Carte.getCartes;
+
     return MaterialApp(
       title: 'YGO Vision',
       theme: ThemeData(

@@ -15,29 +15,32 @@ class Carte {
   List<dynamic> card_sets;
   List<dynamic> card_images;
   List<dynamic> card_prices;
+  List<dynamic> formats;
 
   Carte(
-      this.id,
-      this.name,
-      this.type,
-      this.frameType,
-      this.desc,
-      this.atk,
-      this.def,
-      this.level,
-      this.race,
-      this.attribute,
-      this.card_sets,
-      this.card_images,
-      this.card_prices);
+    this.id,
+    this.name,
+    this.type,
+    this.frameType,
+    this.desc,
+    this.atk,
+    this.def,
+    this.level,
+    this.race,
+    this.attribute,
+    this.card_sets,
+    this.card_images,
+    this.card_prices,
+    this.formats,
+  );
 
   static List<Carte> listeCartes = [];
 
-  static Future<List<Carte?>> getCartes() async {
+  static Future<List<Carte>> getCartes() async {
     if (listeCartes.isEmpty) {
       Map<String, dynamic> response = await RequestApi().getAllCards();
       List<dynamic> cartes = response["data"];
-      Carte.listeCartes = cartes.map((carte) => Carte.fromJson(carte)).toList();
+      Carte.listeCartes = cartes.map((carte) => Carte.fromJson(carte)).where((carte) => carte.formats.contains("TCG")).toList();
     }
     return Carte.listeCartes;
   }
@@ -57,6 +60,7 @@ class Carte {
       json["card_sets"] ?? [],
       json["card_images"] ?? [],
       json["card_prices"] ?? [],
+      json["misc_info"][0]["formats"] ?? [],
     );
   }
 

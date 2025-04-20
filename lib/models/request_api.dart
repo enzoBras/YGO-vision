@@ -4,7 +4,7 @@ import 'dart:convert';
 class RequestApi {
 
   Future<Map<String, dynamic>> getAllCards() async {
-    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php", {'language': 'fr'});
+    var url = Uri.https("db.ygoprodeck.com", "api/v7/cardinfo.php", {'misc':'yes', 'language': 'fr'});
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
