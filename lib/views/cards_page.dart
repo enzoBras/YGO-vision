@@ -16,6 +16,7 @@ class _CardsPageState extends State<CardsPage> {
   final SearchController searchController = SearchController();
   List<Carte> allCartes = [];
   List<Carte> cartes = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -24,17 +25,18 @@ class _CardsPageState extends State<CardsPage> {
     _loadCartes();
   }
 
-  void _loadCartes() async {
-    allCartes = await Carte.getCartes();
-    setState(() {
-      cartes = allCartes;
-    });
-  }
-
   @override
   void dispose() {
     super.dispose();
     searchController.removeListener(queryListener);
+  }
+
+  void _loadCartes() async {
+    allCartes = await Carte.getCartes();
+    setState(() {
+      cartes = allCartes;
+      isLoading = false;
+    });
   }
 
   void queryListener() {
@@ -66,32 +68,34 @@ class _CardsPageState extends State<CardsPage> {
           elevation: WidgetStateProperty.all(0),
         ),
       ),
-      body: cartes.isEmpty
+      body: isLoading
         ? widgetCercleProgression()
-        : GridView.builder(
-          itemCount: cartes.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            final carte = cartes[index];
-            return InkWell(
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                      return DetailCard(carte);
-                    }));
-              },
-              child: Card(
-                margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                child: CachedNetworkImage(
-                  imageUrl: carte.card_images[0]['image_url_small'],
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+        : cartes.isEmpty
+          ? Center(child: Text("Aucun carte trouvée"),)
+          : GridView.builder(
+            itemCount: cartes.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              final carte = cartes[index];
+              return InkWell(
+                onTap: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                        return DetailCard(carte);
+                      }));
+                },
+                child: Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  child: CachedNetworkImage(
+                    imageUrl: carte.card_images[0]['image_url_small'],
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+                  ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
     );
   }
 }

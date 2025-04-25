@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 
@@ -31,5 +32,15 @@ Widget widgetError() {
       'Une erreur est survenue...',
       style: TextStyle(fontWeight: FontWeight.bold, inherit: false, fontSize: 32.0),
     ),
+  );
+}
+
+void callToast(msg) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      textColor: Colors.white,
+      fontSize: 16.0
   );
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ygo_vision/models/request_api.dart';
 
 class Carte {
@@ -64,4 +65,62 @@ class Carte {
     );
   }
 
+  // Parti Firebase ###
+
+  Future<void> add() async {
+    final collection = FirebaseFirestore.instance.collection('Collection');
+    final docCarte = collection.doc(id.toString());
+
+    final snapshotDoc = await docCarte.get();
+
+    int nbExemplaire = 1;
+    if(snapshotDoc.exists) {
+      final data = snapshotDoc.data();
+      nbExemplaire = data?['nb_exemplaire'] + 1;
+    }
+
+    await docCarte.set({
+      'nb_exemplaire': nbExemplaire,
+      'name': name,
+    });
+  }
+
+  Future<int> getNombreExemplaire() async {
+    final collection = FirebaseFirestore.instance.collection('Collection');
+    final docCarte = collection.doc(id.toString());
+
+    final snapshotDoc = await docCarte.get();
+
+    int nbExemplaire = 0;
+    if(snapshotDoc.exists) {
+      final data = snapshotDoc.data();
+      nbExemplaire = data?['nb_exemplaire'];
+    }
+    return nbExemplaire;
+  }
+
+  Future<void> remove() async {
+    final collection = FirebaseFirestore.instance.collection('Collection');
+    final docCarte = collection.doc(id.toString());
+
+    final snapshotDoc = await docCarte.get();
+
+    int nbExemplaire = 0;
+    bool delete = true;
+    if(snapshotDoc.exists) {
+      final data = snapshotDoc.data();
+      nbExemplaire = data?['nb_exemplaire'] - 1;
+      if(nbExemplaire > 0) {
+        delete = false;
+      }
+    }
+    if(delete) {
+      await docCarte.delete();
+    } else {
+      await docCarte.set({
+        'nb_exemplaire': nbExemplaire,
+        'name': name,
+      });
+    }
+  }
 }
