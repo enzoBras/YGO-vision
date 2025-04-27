@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ygo_vision/models/carte.dart';
+import 'package:ygo_vision/views/detail_card_page.dart';
 import 'package:ygo_vision/views/tools.dart';
-
-import 'detail_card_page.dart';
 
 class CardsPage extends StatefulWidget {
   const CardsPage({super.key});
@@ -32,7 +31,7 @@ class _CardsPageState extends State<CardsPage> {
   }
 
   void _loadCartes() async {
-    allCartes = await Carte.getCartes();
+    allCartes = await Carte.getAPICartes();
     setState(() {
       cartes = allCartes;
       isLoading = false;
@@ -86,8 +85,8 @@ class _CardsPageState extends State<CardsPage> {
                         return DetailCard(carte);
                       }));
                 },
-                child: Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                   child: CachedNetworkImage(
                     imageUrl: carte.card_images[0]['image_url_small'],
                     placeholder: (context, url) => const CircularProgressIndicator(),

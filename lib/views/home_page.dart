@@ -5,9 +5,8 @@ import 'package:ygo_vision/views/deck_page.dart';
 import 'package:ygo_vision/views/cards_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
 
-  final String title;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     ];
 
     const List<BottomNavigationBarItem> items =[
-      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/cards.png"), width: 40, height: 40), label: 'Cards'),
+      BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/cards.png"), width: 40, height: 40), label: 'Cartes'),
       BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/collection.png"), width: 40, height: 40), label: 'Collection'),
       BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/deck.png"), width: 40, height: 40), label: 'Deck'),
       BottomNavigationBarItem(icon: Image(image: AssetImage("assets/img/scan.png"), width: 40, height: 40), label: 'Scan',),
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text('YGO Vision'),
       ),
       body: pages[_selectedIndex],
       bottomNavigationBar: Container(

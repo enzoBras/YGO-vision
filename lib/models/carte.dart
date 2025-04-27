@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ygo_vision/models/request_api.dart';
+import 'package:collection/collection.dart';
 
 class Carte {
 
@@ -17,6 +18,7 @@ class Carte {
   List<dynamic> card_images;
   List<dynamic> card_prices;
   List<dynamic> formats;
+  int nbExemplaire = 0;
 
   Carte(
     this.id,
@@ -37,7 +39,7 @@ class Carte {
 
   static List<Carte> listeCartes = [];
 
-  static Future<List<Carte>> getCartes() async {
+  static Future<List<Carte>> getAPICartes() async {
     if (listeCartes.isEmpty) {
       Map<String, dynamic> response = await RequestApi().getAllCards();
       List<dynamic> cartes = response["data"];
@@ -65,6 +67,10 @@ class Carte {
     );
   }
 
+  static Carte? getCarteById(int id) {
+    return listeCartes.firstWhereOrNull((carte) => carte.id == id);
+  }
+
   // Parti Firebase ###
 
   Future<void> add() async {
@@ -73,30 +79,18 @@ class Carte {
 
     final snapshotDoc = await docCarte.get();
 
-    int nbExemplaire = 1;
+    int nbExemplaireFirebase = 1;
     if(snapshotDoc.exists) {
       final data = snapshotDoc.data();
-      nbExemplaire = data?['nb_exemplaire'] + 1;
+      nbExemplaireFirebase = data?['nb_exemplaire'] + 1;
     }
 
     await docCarte.set({
-      'nb_exemplaire': nbExemplaire,
+      'nb_exemplaire': nbExemplaireFirebase,
       'name': name,
     });
-  }
 
-  Future<int> getNombreExemplaire() async {
-    final collection = FirebaseFirestore.instance.collection('Collection');
-    final docCarte = collection.doc(id.toString());
-
-    final snapshotDoc = await docCarte.get();
-
-    int nbExemplaire = 0;
-    if(snapshotDoc.exists) {
-      final data = snapshotDoc.data();
-      nbExemplaire = data?['nb_exemplaire'];
-    }
-    return nbExemplaire;
+    nbExemplaire ++;
   }
 
   Future<void> remove() async {
@@ -105,12 +99,12 @@ class Carte {
 
     final snapshotDoc = await docCarte.get();
 
-    int nbExemplaire = 0;
+    int nbExemplaireFirebase = 0;
     bool delete = true;
     if(snapshotDoc.exists) {
       final data = snapshotDoc.data();
-      nbExemplaire = data?['nb_exemplaire'] - 1;
-      if(nbExemplaire > 0) {
+      nbExemplaireFirebase = data?['nb_exemplaire'] - 1;
+      if(nbExemplaireFirebase > 0) {
         delete = false;
       }
     }
@@ -118,9 +112,29 @@ class Carte {
       await docCarte.delete();
     } else {
       await docCarte.set({
-        'nb_exemplaire': nbExemplaire,
+        'nb_exemplaire': nbExemplaireFirebase,
         'name': name,
       });
     }
+
+    if(nbExemplaire >=1) {
+      nbExemplaire --;
+    }
+  }
+
+  static Future<List<Carte>> getCollectionCarte() async {
+    final collection = FirebaseFirestore.instance.collection('Collection');
+    final docCartes = await collection.get();
+
+    if (listeCartes.isEmpty) {
+      listeCartes = await getAPICartes();
+    }
+
+    return docCartes.docs.map((collection) {
+      int id = int.parse(collection.id);
+      Carte? carte = Carte.getCarteById(id);
+      carte?.nbExemplaire = collection.data()['nb_exemplaire'];
+      return carte;
+    }).whereType<Carte>().toList();
   }
 }

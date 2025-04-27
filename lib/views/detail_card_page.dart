@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ygo_vision/models/carte.dart';
 import 'package:ygo_vision/views/tools.dart';
 
+import 'home_page.dart';
+
 class DetailCard extends StatefulWidget {
   final Carte carte;
   const DetailCard(this.carte, {super.key});
@@ -64,22 +66,6 @@ class _DetailCardState extends State<DetailCard> {
                         ),
                         softWrap: true,
                       ),
-                      /*FutureBuilder(
-                        future: widget.carte.getNombreExemplaire(),
-                        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                          Widget widget = const SizedBox();
-                          if (snapshot.hasData) {
-                            widget = Text("Nombre en stock : ${snapshot.data}");
-                          }
-                          if (snapshot.hasError) {
-                            widget = widgetError();
-                          }
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            widget = widgetCercleProgression();
-                          }
-                          return widget;
-                        }
-                      ),*/
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -87,6 +73,9 @@ class _DetailCardState extends State<DetailCard> {
                             onPressed: () {
                               widget.carte.add();
                               callToast("Carte ajouté à la collection");
+                              setState(() {
+                                // On rafraîchit la page
+                              });
                             },
                             icon: Icon(Icons.add_box)
                           ),
@@ -94,6 +83,9 @@ class _DetailCardState extends State<DetailCard> {
                             onPressed: () {
                               widget.carte.remove();
                               callToast("Carte retiré de la collection");
+                              setState(() {
+                                // On rafraîchit la page
+                              });
                             },
                             icon: Icon(Icons.indeterminate_check_box)
                           )

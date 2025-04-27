@@ -18,7 +18,7 @@ class YGOVision extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Carte.getCartes;
+    Carte.getAPICartes;
 
     return MaterialApp(
       title: 'YGO Vision',
@@ -37,7 +37,7 @@ class YGOVision extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       builder: (context, child) =>
           MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child!),
-      home: const HomePage(title: 'YGO Vision'),
+      home: const HomePage(),
     );
   }
 }
