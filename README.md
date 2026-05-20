@@ -15,4 +15,4 @@ L' application permet la gestion d' une collection de carte YuGiOh. On peut auss
 
 ## Contributeur
 
-* **Enzo Bras** _alias_ [@enzo.bras](https://github.com/enzo.bras)
+* **Enzo Bras** _alias_ [@enzoBras](https://github.com/enzoBras)
