@@ -1,8 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ygo_vision/models/carte.dart';
 import 'package:ygo_vision/views/tools.dart';
-
-import 'home_page.dart';
 
 class DetailCard extends StatefulWidget {
   final Carte carte;
@@ -15,11 +14,13 @@ class DetailCard extends StatefulWidget {
 class _DetailCardState extends State<DetailCard> {
   late final ScrollController _descScrollController;
   late final ScrollController _setsScrollController;
+  final ValueNotifier<int> _notifyNbExemplaire = ValueNotifier<int>(0);
 
   @override
   void initState() {
     _descScrollController = ScrollController();
     _setsScrollController = ScrollController();
+    _notifyNbExemplaire.value = widget.carte.nbExemplaire;
     super.initState();
   }
 
@@ -29,6 +30,7 @@ class _DetailCardState extends State<DetailCard> {
     _setsScrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +44,11 @@ class _DetailCardState extends State<DetailCard> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  widget.carte.card_images[0]['image_url_small'],
-                  scale: 1.8,
+                CachedNetworkImage(
+                  imageUrl: widget.carte.card_images[0]['image_url_small'],
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+                  width: 200,
                 ),
                 SizedBox(width: 8,),
                 Expanded(
@@ -53,39 +57,56 @@ class _DetailCardState extends State<DetailCard> {
                       Text(
                         widget.carte.name,
                         style: TextStyle(
-                            fontSize: 20,
+                          fontSize: 20,
+                          fontFamily: "Card Name"
+                        ),
+                        softWrap: true,
+                      ),
+                      Text(
+                        widget.carte.type,
+                        style: TextStyle(
+                            fontSize: 16,
                             fontFamily: "Card Name"
                         ),
                         softWrap: true,
                       ),
                       Text(
-                        "${widget.carte.frameType} / ${widget.carte.race}",
+                        widget.carte.attribute != "" ? "${widget.carte.attribute} / ${widget.carte.race}" : widget.carte.race,
                         style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: "Card Type"
+                          fontSize: 12,
+                          fontFamily: "Card Type"
                         ),
                         softWrap: true,
+                      ),
+                      ValueListenableBuilder(
+                        valueListenable: _notifyNbExemplaire,
+                        builder: (BuildContext context, value, Widget? child) {
+                          return Text(
+                            "Nombre d'exemplaire dans la collection : $value",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: "Card Name"
+                            ),
+                          );
+                        },
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            onPressed: () {
-                              widget.carte.add();
-                              callToast("Carte ajouté à la collection");
-                              setState(() {
-                                // On rafraîchit la page
-                              });
+                            onPressed: () async {
+                              await widget.carte.add();
+                              callToast("Carte ajoutée à la collection");
+                              _notifyNbExemplaire.value = widget.carte.nbExemplaire;
                             },
                             icon: Icon(Icons.add_box)
                           ),
                           IconButton(
-                            onPressed: () {
-                              widget.carte.remove();
-                              callToast("Carte retiré de la collection");
-                              setState(() {
-                                // On rafraîchit la page
-                              });
+                            onPressed: () async {
+                              await widget.carte.remove();
+                              callToast("Carte retirée de la collection");
+                              _notifyNbExemplaire.value = widget.carte.nbExemplaire;
                             },
                             icon: Icon(Icons.indeterminate_check_box)
                           )
@@ -102,12 +123,16 @@ class _DetailCardState extends State<DetailCard> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               child: RawScrollbar(
+                thumbVisibility: true,
                 controller: _descScrollController,
                 child: SingleChildScrollView(
                   controller: _descScrollController,
                   child: Text(
                     widget.carte.desc,
                     textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      fontFamily: "Card Effect"
+                    ),
                   ),
                 ),
               ),

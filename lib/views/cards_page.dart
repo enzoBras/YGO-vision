@@ -31,11 +31,23 @@ class _CardsPageState extends State<CardsPage> {
   }
 
   void _loadCartes() async {
-    allCartes = await Carte.getAPICartes();
-    setState(() {
-      cartes = allCartes;
-      isLoading = false;
-    });
+    try {
+      allCartes = await Carte.getAPICartes();
+      setState(() {
+        cartes = allCartes;
+        isLoading = false;
+      });
+      if (allCartes.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Impossible de charger les cartes. Vérifiez votre connexion."))
+        );
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Une erreur est survenue : $e"))
+      );
+    }
   }
 
   void queryListener() {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ygo_vision/models/carte.dart';
 import 'package:ygo_vision/views/detail_card_page.dart';
 import 'package:ygo_vision/views/tools.dart';
+import 'package:ygo_vision/views/search_options_sheet.dart';
 import 'package:badges/badges.dart' as badges;
 
 class CollectionPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _CollectionPageState extends State<CollectionPage> {
     } else {
       setState(() {
         cartes = allCartesCollection.where((Carte carte) =>
-            carte.name.toLowerCase().contains(query.toLowerCase())
+          carte.name.toLowerCase().contains(query.toLowerCase())
         ).toList();
       });
     }
@@ -67,6 +68,25 @@ class _CollectionPageState extends State<CollectionPage> {
           hintText: 'Rechercher',
           elevation: WidgetStateProperty.all(0),
         ),
+        titleSpacing: 8.0,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final result = await showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => SearchOptionsSheet(),
+              );
+              if (result != null) {
+                print("Filtres sélectionnés : $result");
+                setState(() {
+                  cartes = Carte.applyFilters(allCartesCollection, result);
+                });
+              }
+            },
+            icon: Icon(Icons.filter_alt_rounded),
+          )
+        ],
       ),
       body: isLoading
         ? widgetCercleProgression()
